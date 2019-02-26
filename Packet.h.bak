@@ -1,0 +1,67 @@
+#ifndef _PACKET_H
+#define _PACKET_H
+
+// 패킷 클래스는 받기와 보내기시 1회용으로만 사용되도록 설계 되었음
+
+class CPacket
+{
+    public:
+        CPacket();
+        ~CPacket();
+        
+        // 패킷 초기화 (읽기용 / 쓰기용)
+
+        void InitPacket(int client_sockfd);
+        void InitPacket(int category, int command, int client_sockfd);
+        
+        // 패킷 읽기시 데이터 타입별로 읽는 함수
+
+        int ReadTinyInt(int &intvalue);
+        int ReadShortInt(int &intvalue);
+        int ReadInt(int &intvalue);
+        int ReadBigInt(long long &longvalue);
+        int ReadChar(char *charvalue, int size);
+        int ReadShortString(char *stringvalue, int maxsize);
+        int ReadString(char *stringvalue, int maxsize);
+    
+        // 패킷 생성시 데이터 타입별로 쓰는 함수
+
+        int WriteTinyInt(int intvalue);
+        int WriteShortInt(int intvalue);
+        int WriteInt(int intvalue);
+        int WriteBigInt(long long longvalue);
+        int WriteChar(char *charvalue, int size);
+        int WriteShortString(char *stringvalue);
+        int WriteString(char *stringvalue);
+    
+        // DATA 끝까지 읽었는지 확인하는 함수
+
+        int IsEOD();
+        
+        // SOCKET을 통해 패킷을 보내고 받는 함수
+
+        int ReceivePacket();
+        int SendPacket();
+
+        int m_nCategory;
+        int m_nCommand;
+
+    protected:
+        // DATA BUFFER 할당 및 부족할 경우 재할당
+
+        void CheckDataBuffer(int size);
+        
+        // DATA 파싱시 읽을 데이터가 존재하는지 확인
+
+        int CheckDataExists(int size);
+        
+    private:
+        int m_nClientSockfd;
+        int m_nDataLength;
+        int m_nDataPointer;
+        char *m_strData;
+};
+
+#endif //_PACKET_H
+
+
