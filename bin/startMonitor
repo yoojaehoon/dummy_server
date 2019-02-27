@@ -1,0 +1,5 @@
+#!/bin/bash
+
+killall -9 inno_monitor
+sleep 2
+/opt/inno_srv2/bin/inno_monitor &
